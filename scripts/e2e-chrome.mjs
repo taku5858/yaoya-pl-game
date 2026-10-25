@@ -20,7 +20,7 @@ fs.mkdirSync(OUT, { recursive: true });
 const CHROME = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/chromium'].find(p => p && fs.existsSync(p));
 if (!CHROME) { console.log('Chrome が見つからないため、確認をスキップしました（CHROME_PATH で指定できます）'); process.exit(0); }
-// E2E_URL を指定すると、ローカルの preview の代わりに公開済みサイトを確認する（例：E2E_URL=https://xxx.pages.dev/）
+// E2E_URL を指定すると、ローカルの preview の代わりに公開済みサイトを確認する（例：E2E_URL=https://taku5858.github.io/yaoya-pl-game/）
 const REMOTE = process.env.E2E_URL ? process.env.E2E_URL.replace(/\/?$/, '/') : '';
 if (!REMOTE && !fs.existsSync(path.join(root, 'dist', 'index.html'))) { console.log('先に npm run build を実行してください'); process.exit(1); }
 

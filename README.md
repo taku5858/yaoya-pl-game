@@ -13,7 +13,7 @@
 - `npm run e2e` を使う場合のみ：Google Chrome または Microsoft Edge（Node.js 22 以上）
 
 ## 公開URL（GitHub Pages）
-- https://taku5858.github.io/yaoya-pl-game/ （公開前。リポジトリを公開して GitHub Pages を有効にするまで開けません。状況は `docs/progress.md`）
+- https://taku5858.github.io/yaoya-pl-game/ （公開中。URL を開くだけで遊べます）
 - URL を知っている人なら誰でも、ログインなしで遊べます。検索エンジンに載る可能性もあります。
 - セーブデータは遊ぶ人それぞれのブラウザ（`localStorage`）に保存され、サーバーには送られません。URL（ドメイン）が変わると以前のセーブは引き継がれません（`localhost` で遊んだデータも公開サイトには移りません）。
 
