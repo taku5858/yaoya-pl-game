@@ -1,0 +1,55 @@
+# チェックと GitHub Pages への公開
+# - main への push：型チェック → テスト → ビルドだけ（公開しない）。リポジトリが非公開で Pages を使えない間も失敗しない。
+# - 手動実行（Actions タブの「Run workflow」）：同じチェックが成功したときだけ、Pages に公開する。
+# pull_request では起動しないので、外部からのプルリクエストで公開処理は走らない。
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# 既定はリポジトリの読み取りだけ。公開に必要な権限は deploy ジョブにだけ与える。
+permissions:
+  contents: read
+
+# 公開は1つずつ。実行中の公開は途中で止めない。
+concurrency:
+  group: pages-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: 依存関係をロックファイルどおりにインストール
+        run: npm ci
+      - name: 型チェック → テスト → 本番ビルド
+        run: npm run check
+      - if: github.event_name == 'workflow_dispatch'
+        uses: actions/configure-pages@v6
+      - if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
